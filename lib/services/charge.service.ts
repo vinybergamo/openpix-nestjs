@@ -50,7 +50,7 @@ export class ChargeService {
       return_existing?: boolean;
     },
   ) {
-    const correlationId = body.correlationId || uuid();
+    const correlationID = body.correlationID || uuid();
 
     const { data } = await firstValueFrom(
       this.http
@@ -58,7 +58,7 @@ export class ChargeService {
           '/charge',
           {
             ...body,
-            correlationID: correlationId,
+            correlationID,
           },
           {
             params,

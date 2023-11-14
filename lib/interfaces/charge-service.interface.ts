@@ -1,8 +1,9 @@
 import { ChargeTypeEnum } from '../enum';
-import { Customer, OptionalObject } from './common';
+import { OptionalObject } from './common';
+import { Customer } from './customer-service.interface';
 
 export interface ChargeCreateBody {
-  correlationId?: string;
+  correlationID?: string;
   value: number;
   type?: ChargeTypeEnum;
   comment?: string;
