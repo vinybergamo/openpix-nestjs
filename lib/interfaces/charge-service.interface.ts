@@ -22,3 +22,9 @@ export interface ChargeCreateBody {
   enableCashbackPercentage?: boolean;
   enableCashbackExclusivePercentage?: boolean;
 }
+
+export interface ChargeRefundCreateBody {
+  correlationID: string;
+  value?: number;
+  comment?: string;
+}

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ChargeCreateBody } from '../interfaces';
+import { ChargeCreateBody, ChargeRefundCreateBody } from '../interfaces';
 import { v4 as uuid } from 'uuid';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
@@ -11,6 +11,34 @@ export class ChargeService {
   private readonly logger = new Logger(ChargeService.name);
 
   constructor(private readonly http: HttpService) {}
+
+  public refund(chargeCorrelationId: string) {
+    return {
+      list: async () => {
+        const { data } = await firstValueFrom(
+          this.http.get(`/charge/${chargeCorrelationId}/refund`).pipe(
+            catchError((error: AxiosError) => {
+              this.logger.error(error.response.data);
+              throw error.response.data;
+            }),
+          ),
+        );
+        return data.refunds;
+      },
+
+      create: async (body: ChargeRefundCreateBody) => {
+        const { data } = await firstValueFrom(
+          this.http.post(`/charge/${chargeCorrelationId}/refund`, body).pipe(
+            catchError((error: AxiosError) => {
+              this.logger.error(error.response.data);
+              throw error.response.data;
+            }),
+          ),
+        );
+        return data.refund;
+      },
+    };
+  }
 
   public async list(params?: {
     start?: Date;

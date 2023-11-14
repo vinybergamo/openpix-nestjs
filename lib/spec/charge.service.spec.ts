@@ -42,6 +42,12 @@ describe('ChargeService', () => {
     expect(result).toHaveProperty('correlationID');
   });
 
+  it('should list a charge refunds', async () => {
+    const result = await service.refund(correlationId).list();
+    expect(result).toBeDefined();
+    expect(result).toBeInstanceOf(Array);
+  });
+
   it('should delete a charge', async () => {
     expect(service.delete(correlationId)).resolves.toBeDefined();
   });
