@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { OpenpixRegisterOption } from './interfaces';
 import { HttpModule } from '@nestjs/axios';
 import { OpenPixService } from './services/openpix.service';
-import { WebhookService } from './services/webhook.service';
+import { providers } from './providers';
 
 @Module({})
 export class OpenPixModule {
@@ -18,7 +18,7 @@ export class OpenPixModule {
           },
         }),
       ],
-      providers: [OpenPixService, WebhookService],
+      providers,
       exports: [OpenPixService],
     };
   }

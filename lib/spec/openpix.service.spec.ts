@@ -1,7 +1,7 @@
 import { OpenPixService } from '../services/openpix.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpModuleForTest } from '../constants';
-import { WebhookService } from '../services/webhook.service';
+import { providers } from '../providers';
 
 describe('OpenpixService', () => {
   let service: OpenPixService;
@@ -9,7 +9,7 @@ describe('OpenpixService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModuleForTest],
-      providers: [OpenPixService, WebhookService],
+      providers,
     }).compile();
 
     service = module.get<OpenPixService>(OpenPixService);
