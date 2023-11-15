@@ -3,6 +3,7 @@ import { WebhookService } from './webhook.service';
 import { ChargeService } from './charge.service';
 import { SubscriptionService } from './subscription.service';
 import { CustomerService } from './customer.service';
+import { TransactionService } from './transaction.service';
 
 @Injectable()
 export class OpenPixService {
@@ -11,6 +12,7 @@ export class OpenPixService {
     private readonly chargeService: ChargeService,
     private readonly subscriptionService: SubscriptionService,
     private readonly customerService: CustomerService,
+    private readonly transactionService: TransactionService,
   ) {}
 
   public get webhook() {
@@ -27,5 +29,9 @@ export class OpenPixService {
 
   public get customer() {
     return this.customerService;
+  }
+
+  public get transaction() {
+    return this.transactionService;
   }
 }
