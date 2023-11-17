@@ -1,6 +1,6 @@
 {
   "name": "openpix-nestjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lib to integrate with OpenPix",
   "author": "Vinybergamo <vinybergamo@gmail.com>",
   "license": "UNLICENSED",
@@ -13,6 +13,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
+    "prepublish:npm": "npm run build",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
