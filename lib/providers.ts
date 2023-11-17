@@ -4,6 +4,7 @@ import { ChargeService } from './services/charge.service';
 import { CustomerService } from './services/customer.service';
 import { SubscriptionService } from './services/subscription.service';
 import { TransactionService } from './services/transaction.service';
+import { CashbackFidelityService } from './services/cashback-fidelity.service';
 
 export const providers = [
   OpenPixService,
@@ -12,4 +13,5 @@ export const providers = [
   CustomerService,
   SubscriptionService,
   TransactionService,
+  CashbackFidelityService,
 ];

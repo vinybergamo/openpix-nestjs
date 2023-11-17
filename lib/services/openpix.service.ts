@@ -4,6 +4,7 @@ import { ChargeService } from './charge.service';
 import { SubscriptionService } from './subscription.service';
 import { CustomerService } from './customer.service';
 import { TransactionService } from './transaction.service';
+import { CashbackFidelityService } from './cashback-fidelity.service';
 
 @Injectable()
 export class OpenPixService {
@@ -13,6 +14,7 @@ export class OpenPixService {
     private readonly subscriptionService: SubscriptionService,
     private readonly customerService: CustomerService,
     private readonly transactionService: TransactionService,
+    private readonly cashbackFidelityService: CashbackFidelityService,
   ) {}
 
   public get webhook() {
@@ -33,5 +35,9 @@ export class OpenPixService {
 
   public get transaction() {
     return this.transactionService;
+  }
+
+  public get cashbackFidelity() {
+    return this.cashbackFidelityService;
   }
 }
