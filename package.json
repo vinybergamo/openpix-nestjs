@@ -1,9 +1,8 @@
 {
   "name": "openpix-nestjs",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Lib to integrate with OpenPix",
+  "author": "Vinybergamo <vinybergamo@gmail.com>",
   "license": "UNLICENSED",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.json",
@@ -17,7 +16,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "publish:npm": "npm publish --access public",
+    "prepublish:next": "npm run build",
+    "publish:next": "npm publish --access public --tag next",
+    "prerelease": "npm run build",
+    "release": "release-it"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.1",
@@ -45,6 +49,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
+    "release-it": "^17.0.0",
     "rimraf": "^5.0.5",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.3",
