@@ -1,5 +1,4 @@
 import { ChargeTypeEnum } from '../enum';
-import { OptionalObject } from './common';
 import { Customer } from './customer-service.interface';
 
 export interface ChargeCreateBody {
@@ -18,7 +17,10 @@ export interface ChargeCreateBody {
   fines?: {
     value: number;
   };
-  additionalInfo?: Array<OptionalObject<string>>;
+  additionalInfo?: Array<{
+    key: string;
+    value: string;
+  }>;
   enableCashbackPercentage?: boolean;
   enableCashbackExclusivePercentage?: boolean;
 }
