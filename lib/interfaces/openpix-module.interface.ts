@@ -1,4 +1,4 @@
 export type OpenpixRegisterOption = {
-  appId: string;
+  appId?: string;
   version?: 'v1';
 };

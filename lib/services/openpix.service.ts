@@ -5,6 +5,8 @@ import { SubscriptionService } from './subscription.service';
 import { CustomerService } from './customer.service';
 import { TransactionService } from './transaction.service';
 import { CashbackFidelityService } from './cashback-fidelity.service';
+import { HttpService } from '@nestjs/axios';
+import { HttpHeaders } from '../interfaces/common';
 
 @Injectable()
 export class OpenPixService {
@@ -15,29 +17,53 @@ export class OpenPixService {
     private readonly customerService: CustomerService,
     private readonly transactionService: TransactionService,
     private readonly cashbackFidelityService: CashbackFidelityService,
+    private readonly httpService: HttpService,
   ) {}
 
-  public get webhook() {
+  get webhook(): WebhookService {
     return this.webhookService;
   }
 
-  public get charge() {
+  get charge(): ChargeService {
     return this.chargeService;
   }
 
-  public get subscription() {
+  get subscription(): SubscriptionService {
     return this.subscriptionService;
   }
 
-  public get customer() {
+  get customer(): CustomerService {
     return this.customerService;
   }
 
-  public get transaction() {
+  get transaction(): TransactionService {
     return this.transactionService;
   }
 
-  public get cashbackFidelity() {
+  get cashbackFidelity(): CashbackFidelityService {
     return this.cashbackFidelityService;
+  }
+
+  public setHeaders(headers: HttpHeaders) {
+    const openpixSerice = new OpenPixService(
+      this.webhookService,
+      this.chargeService,
+      this.subscriptionService,
+      this.customerService,
+      this.transactionService,
+      this.cashbackFidelityService,
+      this.httpService,
+    );
+
+    openpixSerice.defineHaders(headers);
+
+    return openpixSerice;
+  }
+
+  private defineHaders(headers: HttpHeaders) {
+    this.httpService.axiosRef.defaults.headers = {
+      ...this.httpService.axiosRef.defaults.headers,
+      ...headers,
+    };
   }
 }
