@@ -1,7 +1,7 @@
 import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ChargeCreateBody } from '../interfaces';
 import { v4 as uuid } from 'uuid';
-import { AxiosError, AxiosInstance } from 'axios';
+import { AxiosInstance } from 'axios';
 import { ChargeStatusEnum } from '../enum';
 import { AXIOS_INSTANCE_TOKEN } from '../openpix.constants';
 
@@ -19,24 +19,23 @@ export class ChargeService {
     end?: Date;
     status?: ChargeStatusEnum;
   }) {
-    const { data } = await this.http
-      .get('/charge', {
+    try {
+      const { data } = await this.http.get('/charge', {
         params,
-      })
-      .catch((error: AxiosError) => {
-        throw new HttpException(error.response.data, error.response.status);
       });
-
-    return data;
+      return data;
+    } catch (error) {
+      throw new HttpException(error.response.data, error.response.status);
+    }
   }
 
   public async get(correlationId: string) {
-    const { data } = await this.http
-      .get(`/charge/${correlationId}`)
-      .catch((error: AxiosError) => {
-        throw new HttpException(error.response.data, error.response.status);
-      });
-    return data.charge;
+    try {
+      const { data } = await this.http.get(`/charge/${correlationId}`);
+      return data.charge;
+    } catch (error) {
+      throw new HttpException(error.response.data, error.response.status);
+    }
   }
 
   public async create(
@@ -47,8 +46,8 @@ export class ChargeService {
   ) {
     const correlationID = body.correlationID || uuid();
 
-    const { data } = await this.http
-      .post(
+    try {
+      const { data } = await this.http.post(
         '/charge',
         {
           ...body,
@@ -57,19 +56,20 @@ export class ChargeService {
         {
           params,
         },
-      )
-      .catch((error: AxiosError) => {
-        throw new HttpException(error.response.data, error.response.status);
-      });
-    return data.charge;
+      );
+      return data.charge;
+      return data.charge;
+    } catch (error) {
+      throw new HttpException(error.response.data, error.response.status);
+    }
   }
 
   public async delete(correlationId: string) {
-    const { data } = await this.http
-      .delete(`/charge/${correlationId}`)
-      .catch((error: AxiosError) => {
-        throw new HttpException(error.response.data, error.response.status);
-      });
-    return data;
+    try {
+      const { data } = await this.http.delete(`/charge/${correlationId}`);
+      return data;
+    } catch (error) {
+      throw new HttpException(error.response.data, error.response.status);
+    }
   }
 }
