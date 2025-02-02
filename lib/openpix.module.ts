@@ -21,7 +21,7 @@ export class OpenPixModule {
     const { appId, version, global } = options;
     return {
       module: OpenPixModule,
-      global: global,
+      global,
       providers: [
         ...providers,
         {
@@ -33,7 +33,7 @@ export class OpenPixModule {
           useValue: this.createAxiosInstance(OPENPIX_BASE_URL, appId, version),
         },
       ],
-      exports: [OpenPixService],
+      exports: [OpenPixService, AXIOS_INSTANCE_TOKEN],
     };
   }
 
@@ -62,13 +62,13 @@ export class OpenPixModule {
           inject: [OPENPIX_MODULE_OPTIONS],
         },
       ],
-      exports: [OpenPixService],
+      exports: [OpenPixService, AXIOS_INSTANCE_TOKEN],
     };
   }
 
   private static createAxiosInstance(
     url: string,
-    appId: string,
+    appId?: string,
     version = 'v1',
   ) {
     return Axios.create({
@@ -86,13 +86,24 @@ export class OpenPixModule {
     if (options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
-    return [
-      this.createAsyncOptionsProvider(options),
-      {
+
+    const providers: Provider[] = [this.createAsyncOptionsProvider(options)];
+
+    if (options.useClass) {
+      providers.push({
         provide: options.useClass,
         useClass: options.useClass,
-      },
-    ];
+      });
+    }
+
+    if (options.useExisting) {
+      providers.push({
+        provide: OPENPIX_MODULE_OPTIONS,
+        useExisting: options.useExisting,
+      });
+    }
+
+    return providers;
   }
 
   private static createAsyncOptionsProvider(
@@ -110,7 +121,7 @@ export class OpenPixModule {
       provide: OPENPIX_MODULE_OPTIONS,
       useFactory: async (optionsFactory: OpenPixModuleOptionsFactory) =>
         optionsFactory.createOpenPixOptions(),
-      inject: options.inject || [],
+      inject: [options.useClass || options.useExisting],
     };
   }
 }
