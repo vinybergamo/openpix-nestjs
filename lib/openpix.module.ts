@@ -71,6 +71,7 @@ export class OpenPixModule {
     appId?: string,
     version = 'v1',
   ) {
+    console.log('OPEN_PIX_MODULE_OPTIONS', url, appId, version);
     return Axios.create({
       baseURL: `${url}${version}`,
       headers: {
