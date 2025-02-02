@@ -11,14 +11,14 @@ export interface OpenPixModuleOptions {
   global?: boolean;
 }
 
-export interface OpenPixOptionsFactory {
+export interface OpenPixModuleOptionsFactory {
   createOpenPixOptions(): Promise<OpenPixModuleOptions> | OpenPixModuleOptions;
 }
 
 export interface OpenPixModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
-  useExisting?: Type<OpenPixOptionsFactory>;
-  useClass?: Type<OpenPixOptionsFactory>;
+  useExisting?: Type<OpenPixModuleOptionsFactory>;
+  useClass?: Type<OpenPixModuleOptionsFactory>;
   useFactory?: (
     ...args: any[]
   ) => Promise<OpenPixModuleOptions> | OpenPixModuleOptions;

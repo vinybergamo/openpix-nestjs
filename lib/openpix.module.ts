@@ -1,14 +1,19 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
 import { OpenPixService } from './services/openpix.service';
 import { providers } from './providers';
 import {
   OpenPixModuleAsyncOptions,
   OpenPixModuleOptions,
-  OpenPixOptionsFactory,
+  OpenPixModuleOptionsFactory,
 } from './interfaces';
-import { OPENPIX_MODULE_ID, OPENPIX_MODULE_OPTIONS } from './openpix.constants';
+import {
+  AXIOS_INSTANCE_TOKEN,
+  OPENPIX_BASE_URL,
+  OPENPIX_MODULE_ID,
+  OPENPIX_MODULE_OPTIONS,
+} from './openpix.constants';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
+import Axios from 'axios';
 
 @Module({})
 export class OpenPixModule {
@@ -17,84 +22,94 @@ export class OpenPixModule {
     return {
       module: OpenPixModule,
       global: global,
-      imports: [
-        HttpModule.register({
-          baseURL: `https://api.openpix.com.br/api/${version ?? 'v1'}`,
-          headers: {
-            Authorization: `${appId}`,
-            'Content-Type': 'application/json',
-          },
-        }),
-      ],
       providers: [
         ...providers,
         {
           provide: OPENPIX_MODULE_ID,
           useValue: randomStringGenerator(),
+        },
+        {
+          provide: AXIOS_INSTANCE_TOKEN,
+          useValue: this.createAxiosInstance(OPENPIX_BASE_URL, appId, version),
         },
       ],
       exports: [OpenPixService],
     };
   }
 
-  static registerAsync(options: OpenPixModuleAsyncOptions): DynamicModule {
+  static registerAsync(
+    moduleOptions: OpenPixModuleAsyncOptions,
+  ): DynamicModule {
     return {
       module: OpenPixModule,
-      global: options.global,
-      imports: [
-        HttpModule.registerAsync({
-          useFactory: async (openPixOptions: OpenPixModuleOptions) => {
-            const { appId, version } = openPixOptions;
-            return {
-              baseURL: `https://api.openpix.com.br/api/${version ?? 'v1'}`,
-              headers: {
-                Authorization: `${appId}`,
-                'Content-Type': 'application/json',
-              },
-            };
-          },
-        }),
-      ],
+      global: moduleOptions.global,
+      imports: moduleOptions.imports,
       providers: [
-        ...this.createAsyncProviders(options),
-        ...providers,
+        ...this.createAsyncProviders(moduleOptions),
         {
           provide: OPENPIX_MODULE_ID,
           useValue: randomStringGenerator(),
         },
+        {
+          provide: AXIOS_INSTANCE_TOKEN,
+          useFactory: (options: OpenPixModuleOptions) =>
+            this.createAxiosInstance(
+              OPENPIX_BASE_URL,
+              options.appId,
+              options.version,
+            ),
+          inject: [OPENPIX_MODULE_OPTIONS],
+        },
       ],
       exports: [OpenPixService],
     };
+  }
+
+  private static createAxiosInstance(
+    url: string,
+    appId: string,
+    version = 'v1',
+  ) {
+    return Axios.create({
+      baseURL: `${url}${version}`,
+      headers: {
+        Authorization: `${appId}`,
+        'Content-Type': 'application/json',
+      },
+    });
   }
 
   private static createAsyncProviders(
     options: OpenPixModuleAsyncOptions,
   ): Provider[] {
     if (options.useFactory) {
-      return [
-        {
-          provide: OPENPIX_MODULE_OPTIONS,
-          useFactory: options.useFactory,
-          inject: options.inject || [],
-        },
-      ];
+      return [this.createAsyncOptionsProvider(options)];
+    }
+    return [
+      this.createAsyncOptionsProvider(options),
+      {
+        provide: options.useClass,
+        useClass: options.useClass,
+      },
+    ];
+  }
+
+  private static createAsyncOptionsProvider(
+    options: OpenPixModuleAsyncOptions,
+  ): Provider {
+    if (options.useFactory) {
+      return {
+        provide: OPENPIX_MODULE_OPTIONS,
+        useFactory: options.useFactory,
+        inject: options.inject || [],
+      };
     }
 
-    return [
-      {
-        provide: OPENPIX_MODULE_OPTIONS,
-        useFactory: async (optionsFactory: OpenPixOptionsFactory) =>
-          await optionsFactory.createOpenPixOptions(),
-        inject: [options.useExisting || options.useClass],
-      },
-      ...(options.useClass
-        ? [
-            {
-              provide: options.useClass,
-              useClass: options.useClass,
-            },
-          ]
-        : []),
-    ];
+    return {
+      provide: OPENPIX_MODULE_OPTIONS,
+      useFactory: async (optionsFactory: OpenPixModuleOptionsFactory) =>
+        optionsFactory.createOpenPixOptions(),
+      inject: options.inject || [],
+    };
   }
 }
