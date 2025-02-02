@@ -46,6 +46,7 @@ export class OpenPixModule {
       imports: moduleOptions.imports,
       providers: [
         ...this.createAsyncProviders(moduleOptions),
+        ...providers,
         {
           provide: OPENPIX_MODULE_ID,
           useValue: randomStringGenerator(),
