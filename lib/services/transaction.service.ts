@@ -1,12 +1,9 @@
-import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { AxiosError, AxiosInstance } from 'axios';
 import { AXIOS_INSTANCE_TOKEN } from '../openpix.constants';
 
 @Injectable()
 export class TransactionService {
-  public async;
-  private readonly logger = new Logger(TransactionService.name);
-
   constructor(
     @Inject(AXIOS_INSTANCE_TOKEN)
     private readonly http: AxiosInstance,

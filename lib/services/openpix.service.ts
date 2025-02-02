@@ -13,7 +13,7 @@ export class OpenPixService {
     return this.chargeService;
   }
 
-  get transaction() {
+  get transaction(): TransactionService {
     return this.transactionService;
   }
 }

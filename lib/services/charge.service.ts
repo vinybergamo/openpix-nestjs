@@ -1,14 +1,18 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ChargeCreateBody } from '../interfaces';
 import { v4 as uuid } from 'uuid';
 import { AxiosError, AxiosInstance } from 'axios';
 import { ChargeStatusEnum } from '../enum';
+import { AXIOS_INSTANCE_TOKEN } from '../openpix.constants';
 
 @Injectable()
 export class ChargeService {
   private readonly logger = new Logger(ChargeService.name);
 
-  constructor(private readonly http: AxiosInstance) {}
+  constructor(
+    @Inject(AXIOS_INSTANCE_TOKEN)
+    private readonly http: AxiosInstance,
+  ) {}
 
   public async list(params?: {
     start?: Date;
