@@ -1,24 +1,23 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { catchError, firstValueFrom } from 'rxjs';
-import { AxiosError } from 'axios';
+import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
+import { AxiosError, AxiosInstance } from 'axios';
+import { AXIOS_INSTANCE_TOKEN } from '../openpix.constants';
 
 @Injectable()
 export class TransactionService {
   public async;
   private readonly logger = new Logger(TransactionService.name);
 
-  constructor(private readonly http: HttpService) {}
+  constructor(
+    @Inject(AXIOS_INSTANCE_TOKEN)
+    private readonly http: AxiosInstance,
+  ) {}
 
   public async get(transactionId: string) {
-    const { data } = await firstValueFrom(
-      this.http.get(`/transaction/${transactionId}`).pipe(
-        catchError((error: AxiosError) => {
-          this.logger.error(error.response.data);
-          throw error.response.data;
-        }),
-      ),
-    );
+    const { data } = await this.http
+      .get(`/transaction/${transactionId}`)
+      .catch((error: AxiosError) => {
+        throw new HttpException(error.response.data, error.response.status);
+      });
 
     return data.transaction;
   }
@@ -30,15 +29,11 @@ export class TransactionService {
     pixQrCode?: string;
     withdrawal?: string;
   }) {
-    const { data } = await firstValueFrom(
-      this.http.get('/transactions', { params }).pipe(
-        catchError((error: AxiosError) => {
-          this.logger.error(error.response.data);
-          throw error.response.data;
-        }),
-      ),
-    );
-
+    const { data } = await this.http
+      .get('/transactions', { params })
+      .catch((error: AxiosError) => {
+        throw new HttpException(error.response.data, error.response.status);
+      });
     return data;
   }
 }
