@@ -9,6 +9,7 @@ export interface OpenPixModuleOptions {
   appId?: string;
   version?: 'v1';
   global?: boolean;
+  sandbox?: boolean;
 }
 
 export interface OpenPixModuleOptionsFactory {

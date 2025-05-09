@@ -18,7 +18,8 @@ import Axios from 'axios';
 @Module({})
 export class OpenPixModule {
   static register(options: OpenPixModuleOptions): DynamicModule {
-    const { appId, version, global } = options;
+    const { appId, version, global, sandbox } = options;
+    const isSandbox = sandbox || false;
     return {
       module: OpenPixModule,
       global,
@@ -30,7 +31,11 @@ export class OpenPixModule {
         },
         {
           provide: AXIOS_INSTANCE_TOKEN,
-          useValue: this.createAxiosInstance(OPENPIX_BASE_URL, appId, version),
+          useValue: this.createAxiosInstance(
+            OPENPIX_BASE_URL(isSandbox),
+            appId,
+            version,
+          ),
         },
       ],
       exports: [OpenPixService, AXIOS_INSTANCE_TOKEN],
@@ -55,7 +60,7 @@ export class OpenPixModule {
           provide: AXIOS_INSTANCE_TOKEN,
           useFactory: (options: OpenPixModuleOptions) =>
             this.createAxiosInstance(
-              OPENPIX_BASE_URL,
+              OPENPIX_BASE_URL(options.sandbox || false),
               options.appId,
               options.version,
             ),
