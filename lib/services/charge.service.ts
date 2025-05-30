@@ -58,7 +58,6 @@ export class ChargeService {
         },
       );
       return data.charge;
-      return data.charge;
     } catch (error) {
       throw new HttpException(error.response.data, error.response.status);
     }
@@ -67,6 +66,20 @@ export class ChargeService {
   public async delete(correlationId: string) {
     try {
       const { data } = await this.http.delete(`/charge/${correlationId}`);
+      return data;
+    } catch (error) {
+      throw new HttpException(error.response.data, error.response.status);
+    }
+  }
+
+  public async update(
+    correlationId: string,
+    body: {
+      expiresDate?: Date;
+    },
+  ) {
+    try {
+      const { data } = await this.http.patch(`/charge/${correlationId}`, body);
       return data;
     } catch (error) {
       throw new HttpException(error.response.data, error.response.status);
