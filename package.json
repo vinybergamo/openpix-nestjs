@@ -1,6 +1,6 @@
 {
   "name": "openpix-nestjs",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "Lib to integrate with OpenPix",
   "author": "Vinybergamo <vinybergamo@gmail.com>",
   "license": "UNLICENSED",
