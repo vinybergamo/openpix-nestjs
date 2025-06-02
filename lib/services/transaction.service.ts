@@ -27,7 +27,7 @@ export class TransactionService {
     withdrawal?: string;
   }) {
     const { data } = await this.http
-      .get('/transactions', { params })
+      .get('/transaction', { params })
       .catch((error: AxiosError) => {
         throw new HttpException(error.response.data, error.response.status);
       });
