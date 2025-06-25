@@ -4,7 +4,7 @@ import { AxiosInstance } from 'axios';
 import {
   RefundCreateBody,
   RefundCreateResponse,
-} from '../interfaces/refunds-service.interface';
+} from '../interfaces/refund-service.interface';
 
 @Injectable()
 export class RefundsService {

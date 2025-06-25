@@ -18,4 +18,8 @@ export class OpenPixService {
   get transaction(): TransactionService {
     return this.transactionService;
   }
+
+  get refunds(): RefundsService {
+    return this.refundsService;
+  }
 }
